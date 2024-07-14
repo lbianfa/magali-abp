@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using magali.Authors;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
@@ -18,6 +20,7 @@ public class magaliDbContext :
     IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Author> Authors { get; set; }
 
     #region Entities from the modules
 
@@ -64,11 +67,17 @@ public class magaliDbContext :
 
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(magaliConsts.DbTablePrefix + "YourEntities", magaliConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<Author>(author =>
+        {
+            author.ToTable(magaliConsts.DbTablePrefix + "Authors", magaliConsts.DbSchema);
+            author.ConfigureByConvention(); //auto configure for the base class props
+
+            author.Property(a => a.Identification).IsRequired();
+            author.Property(a => a.Name).IsRequired().HasMaxLength(AuthorConsts.MaxNameLength);
+            author.Property(a => a.BirthDate).IsRequired();
+
+            //Primary key
+            //author.HasKey(a => a.Identification);
+        });
     }
 }

@@ -79,29 +79,24 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
-
-
-
-
-
         // Swagger Client
-        var swaggerClientId = configurationSection["magali_Swagger:ClientId"];
-        if (!swaggerClientId.IsNullOrWhiteSpace())
-        {
-            var swaggerRootUrl = configurationSection["magali_Swagger:RootUrl"]?.TrimEnd('/');
+        //var swaggerClientId = configurationSection["magali_Swagger:ClientId"];
+        //if (!swaggerClientId.IsNullOrWhiteSpace())
+        //{
+        //    var swaggerRootUrl = configurationSection["magali_Swagger:RootUrl"]?.TrimEnd('/');
 
-            await CreateApplicationAsync(
-                name: swaggerClientId!,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Swagger Application",
-                secret: null,
-                grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
-                scopes: commonScopes,
-                redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
-                clientUri: swaggerRootUrl
-            );
-        }
+        //    await CreateApplicationAsync(
+        //        name: swaggerClientId!,
+        //        type: OpenIddictConstants.ClientTypes.Public,
+        //        consentType: OpenIddictConstants.ConsentTypes.Implicit,
+        //        displayName: "Swagger Application",
+        //        secret: null,
+        //        grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
+        //        scopes: commonScopes,
+        //        redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
+        //        clientUri: swaggerRootUrl
+        //    );
+        //}
     }
 
     private async Task CreateApplicationAsync(

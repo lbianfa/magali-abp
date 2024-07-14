@@ -4,6 +4,11 @@ public static class magaliPermissions
 {
     public const string GroupName = "magali";
 
-    //Add your own permission names. Example:
-    //public const string MyPermission1 = GroupName + ".MyPermission1";
+    public static class Authors
+    {
+        public const string Default = GroupName + ".Authors";
+        public const string Create = Default + ".create";
+        public const string Edit = Default + ".edit";
+        public const string Delete = Default + ".delete";
+    }
 }
