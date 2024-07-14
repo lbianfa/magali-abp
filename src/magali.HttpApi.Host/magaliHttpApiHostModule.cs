@@ -29,6 +29,7 @@ using Volo.Abp.Security.Claims;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Microsoft.AspNetCore.Mvc;
 
 namespace magali;
 
@@ -70,6 +71,11 @@ public class magaliHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+
+        Configure<MvcOptions>(options =>
+        {
+            options.Conventions.Add(new ControllerExclusions());
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
