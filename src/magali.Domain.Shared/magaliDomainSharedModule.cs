@@ -1,9 +1,6 @@
-﻿using magali.Localization;
-using Volo.Abp.AuditLogging;
+﻿using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.Identity;
-using Volo.Abp.Localization;
-using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict;
 using Volo.Abp.PermissionManagement;
@@ -32,21 +29,6 @@ public class magaliDomainSharedModule : AbpModule
         Configure<AbpVirtualFileSystemOptions>(options =>
         {
             options.FileSets.AddEmbedded<magaliDomainSharedModule>();
-        });
-
-        Configure<AbpLocalizationOptions>(options =>
-        {
-            options.Resources
-                .Add<magaliResource>("en")
-                .AddBaseTypes(typeof(AbpValidationResource))
-                .AddVirtualJson("/Localization/magali");
-
-            options.DefaultResourceType = typeof(magaliResource);
-        });
-
-        Configure<AbpExceptionLocalizationOptions>(options =>
-        {
-            options.MapCodeNamespace("magali", typeof(magaliResource));
         });
     }
 }
