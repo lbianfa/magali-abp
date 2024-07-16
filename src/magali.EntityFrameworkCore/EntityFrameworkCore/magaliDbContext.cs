@@ -1,4 +1,5 @@
 ﻿using magali.Authors;
+using magali.Books;
 using magali.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -22,6 +23,7 @@ public class magaliDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     public DbSet<Author> Authors { get; set; }
+    public DbSet<Book> Books { get; set; }
 
     #region Entities from the modules
 
@@ -77,14 +79,27 @@ public class magaliDbContext :
             author.Property(a => a.Name).IsRequired().HasMaxLength(AuthorConsts.MaxNameLength);
             author.Property(a => a.BirthDate).IsRequired();
 
+            author.HasIndex(a => a.Name);
+
             //Primary key
             //author.HasKey(a => a.Identification);
+        });
+
+        builder.Entity<Book>(book =>
+        {
+            book.ToTable(magaliConsts.DbTablePrefix + "Books", magaliConsts.DbSchema);
+            book.ConfigureByConvention(); //auto configure for the base class props
+
+            book.Property(b => b.Name).IsRequired().HasMaxLength(BookConsts.MaxNameLength);
+
+            // ADD THE MAPPING FOR THE RELATION
+            book.HasOne<Author>().WithMany().HasForeignKey(author => author.AuthorId).IsRequired();
         });
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(new LowerCaseStringInterceptor());
+        //optionsBuilder.AddInterceptors(new LowerCaseStringInterceptor());
         base.OnConfiguring(optionsBuilder);
     }
 }
