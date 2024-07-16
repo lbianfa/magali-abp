@@ -1,4 +1,5 @@
 ﻿using magali.Authors;
+using magali.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -79,5 +80,11 @@ public class magaliDbContext :
             //Primary key
             //author.HasKey(a => a.Identification);
         });
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(new LowerCaseStringInterceptor());
+        base.OnConfiguring(optionsBuilder);
     }
 }
