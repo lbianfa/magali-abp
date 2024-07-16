@@ -27,7 +27,7 @@ namespace magali
             await _authorRepository.InsertAsync(
                 await _authorManager.CreateAsync(
                     1210,
-                    "Gabriel Garcia Marquez",
+                    "gabriel garcia marquez",
                     new DateTime(1927, 03, 17),
                     "El mejor escritor del Mundo"
                 )
@@ -36,7 +36,7 @@ namespace magali
             await _authorRepository.InsertAsync(
                 await _authorManager.CreateAsync(
                     1211,
-                    "Fabian Serna",
+                    "fabian serna",
                     new DateTime(1998, 10, 15),
                     null
                 )

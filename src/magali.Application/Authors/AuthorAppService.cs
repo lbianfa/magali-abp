@@ -51,7 +51,7 @@ namespace magali.Authors
             var query = await Repository.GetQueryableAsync();
 
             // Apply filtering
-            query = query.WhereIf(!input.Filter.IsNullOrEmpty(), a => a.Name.ToLower().Contains(input.Filter.ToLower()));
+            query = query.WhereIf(!input.Filter.IsNullOrEmpty(), a => a.Name.Contains(input.Filter));
 
             // Apply sorting
             query = query.OrderBy(input.Sorting ?? "creationTime desc");
