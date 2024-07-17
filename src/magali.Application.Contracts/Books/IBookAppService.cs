@@ -1,4 +1,5 @@
 ﻿using magali.Authors;
+using magali.Books.CustomFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace magali.Books
     public interface IBookAppService : ICrudAppService<
             BookDto,
             Guid,
-            PagedSortedAndFilteredResultRequestDto,
+            BookFilters,
             CreateUpdateBookDto
         >
     {

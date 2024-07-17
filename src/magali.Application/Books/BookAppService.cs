@@ -1,4 +1,5 @@
 ﻿using magali.Authors;
+using magali.Books.CustomFilters;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -14,7 +15,7 @@ namespace magali.Books
             Book,
             BookDto,
             Guid,
-            PagedSortedAndFilteredResultRequestDto,
+            BookFilters,
             CreateUpdateBookDto
         >, IBookAppService
     {
@@ -23,6 +24,7 @@ namespace magali.Books
         public BookAppService(IRepository<Book, Guid> repository, IRepository<Author, Guid> authorRepository) : base(repository)
         {
             _authorRepository = authorRepository;
+            CreatePolicyName = null;
         }
 
         private async Task<Author?> GetAuthorAsync(Guid authorId)
@@ -72,12 +74,18 @@ namespace magali.Books
             return book;
         }
 
-        public override async Task<PagedResultDto<BookDto>> GetListAsync(PagedSortedAndFilteredResultRequestDto input)
+        public override async Task<PagedResultDto<BookDto>> GetListAsync(BookFilters input)
         {
             var query = await Repository.GetQueryableAsync();
 
-            // Apply filtering
-            query = query.WhereIf(!input.Filter.IsNullOrEmpty(), a => a.Name.Contains(input.Filter));
+            // Apply filtering by name
+            query = query.WhereIf(!input.Filter.IsNullOrEmpty(), b => b.Name.Contains(input.Filter));
+
+            // Apply filtering by author
+            query = query.WhereIf(input.FilterByAuthor != Guid.Empty, b => b.AuthorId.Equals(input.FilterByAuthor));
+
+            // Apply filtering by bookType
+            query = query.WhereIf(input.Type.HasValue, b => b.Type.Equals(input.Type));
 
             // Apply sorting
             query = query.OrderBy(input.Sorting ?? "creationTime desc");
