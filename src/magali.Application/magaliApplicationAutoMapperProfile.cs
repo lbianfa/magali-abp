@@ -10,6 +10,7 @@ public class magaliApplicationAutoMapperProfile : Profile
     public magaliApplicationAutoMapperProfile()
     {
         CreateMap<Author, AuthorDto>();
+        CreateMap<Author, AuthorLookupDto>();
         CreateMap<CreateUpdateAuthorDto, Author>();
 
         CreateMap<Book, BookDto>()

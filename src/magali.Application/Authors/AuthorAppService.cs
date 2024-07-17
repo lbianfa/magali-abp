@@ -11,7 +11,6 @@ using Volo.Abp.Domain.Repositories;
 
 namespace magali.Authors
 {
-    [Authorize(magaliPermissions.Authors.Default)]
     public class AuthorAppService : CrudAppService<
             Author,
             AuthorDto,
@@ -67,6 +66,30 @@ namespace magali.Authors
             var authorsDtos = ObjectMapper.Map<List<Author>, List<AuthorDto>>(authors).ToList();
 
             return new PagedResultDto<AuthorDto>(totalCount, authorsDtos);
+        }
+
+        public async Task<PagedResultDto<AuthorLookupDto>> GetAuthorLookup(PagedSortedAndFilteredResultRequestDto input)
+        {
+            var query = await Repository.GetQueryableAsync();
+
+            // Apply filtering
+            query = query.WhereIf(!input.Filter.IsNullOrEmpty(), a => a.Name.Contains(input.Filter.ToLowerInvariant()));
+
+            // Apply sorting
+            query = query.OrderBy(input.Sorting ?? "creationTime desc");
+
+            // Get totalCount before about pagination
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            // Apply paging
+            query = query.PageBy(input.SkipCount, input.MaxResultCount);
+
+            // Execute the query and get the result
+            var authors = await AsyncExecuter.ToListAsync(query);
+
+            var authorsDtos = ObjectMapper.Map<List<Author>, List<AuthorLookupDto>>(authors).ToList();
+
+            return new PagedResultDto<AuthorLookupDto>(totalCount, authorsDtos);
         }
     }
 }
