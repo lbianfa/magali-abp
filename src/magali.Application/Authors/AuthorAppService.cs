@@ -27,7 +27,6 @@ namespace magali.Authors
             _authorManager = authorManager;
             GetPolicyName = magaliPermissions.Authors.Default;
             GetListPolicyName = magaliPermissions.Authors.Default;
-            GetPolicyName = magaliPermissions.Authors.Default;
             CreatePolicyName = magaliPermissions.Authors.Create;
             UpdatePolicyName = magaliPermissions.Authors.Edit;
             DeletePolicyName = magaliPermissions.Authors.Delete;

@@ -1,5 +1,6 @@
 ﻿using magali.Authors;
 using magali.Books.CustomFilters;
+using magali.Permissions;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -24,7 +25,11 @@ namespace magali.Books
         public BookAppService(IRepository<Book, Guid> repository, IRepository<Author, Guid> authorRepository) : base(repository)
         {
             _authorRepository = authorRepository;
-            CreatePolicyName = null;
+            GetPolicyName = null;
+            GetListPolicyName = null;
+            CreatePolicyName = magaliPermissions.Books.Create;
+            UpdatePolicyName = magaliPermissions.Books.Edit;
+            DeletePolicyName = magaliPermissions.Books.Delete;
         }
 
         private async Task<Author?> GetAuthorAsync(Guid authorId)
@@ -45,6 +50,8 @@ namespace magali.Books
 
         public override async Task<BookDto> CreateAsync(CreateUpdateBookDto input)
         {
+            await CheckCreatePolicyAsync();
+
             var author = await GetAuthorAsync(input.AuthorId);
 
             var newBook = await base.CreateAsync(input);
@@ -55,6 +62,8 @@ namespace magali.Books
 
         public override async Task<BookDto> UpdateAsync(Guid id, CreateUpdateBookDto input)
         {
+            await CheckUpdatePolicyAsync();
+
             var author = await GetAuthorAsync(input.AuthorId);
 
             var bookUpdated = await base.UpdateAsync(id, input);
@@ -76,6 +85,7 @@ namespace magali.Books
 
         public override async Task<PagedResultDto<BookDto>> GetListAsync(BookFilters input)
         {
+
             var query = await Repository.GetQueryableAsync();
 
             // Apply filtering by name
